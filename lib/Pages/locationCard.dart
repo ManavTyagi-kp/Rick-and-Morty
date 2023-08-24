@@ -29,7 +29,7 @@ class ListCard extends ConsumerWidget {
     return SizedBox(
       height: 300,
       child: Card(
-        color: const Color.fromARGB(255, 33, 30, 92),
+        color: const Color.fromARGB(255, 14, 43, 81),
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Column(
