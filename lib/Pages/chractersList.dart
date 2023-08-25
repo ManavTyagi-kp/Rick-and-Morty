@@ -6,26 +6,39 @@ import 'package:rickandmorty/utility/models.dart' as models;
 import 'CharacterCard.dart';
 
 class CharacterList extends StatefulWidget {
-  const CharacterList({
+  String url;
+  CharacterList({
+    required this.url,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<CharacterList> createState() => _CharacterListState();
+  State<CharacterList> createState() => CharacterListState();
 }
 
-class _CharacterListState extends State<CharacterList> {
-  late String url;
+class CharacterListState extends State<CharacterList>
+    with AutomaticKeepAliveClientMixin {
+  // late String url;
   late final PagingController<String, dynamic> _pagingController;
+  // final TextEditingController _searchController = TextEditingController();
+  // bool _search = true;
+  // String _query = '';
 
   @override
   void initState() {
-    _pagingController = PagingController(
-        firstPageKey: 'https://rickandmortyapi.com/api/character/?page=1');
+    _pagingController = PagingController(firstPageKey: widget.url);
     _pagingController.addPageRequestListener((url) {
       _fetchPage(url);
     });
     super.initState();
+  }
+
+  void refresh(String url) {
+    setState(() {
+      widget.url = url;
+      _fetchPage(url);
+    });
+    _pagingController.refresh();
   }
 
   @override
@@ -54,6 +67,7 @@ class _CharacterListState extends State<CharacterList> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     print('built');
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -70,4 +84,7 @@ class _CharacterListState extends State<CharacterList> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => false;
 }

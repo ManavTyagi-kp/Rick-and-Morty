@@ -33,7 +33,7 @@ class ListCard extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 alignment: Alignment.topCenter,
@@ -51,11 +51,16 @@ class ListCard extends ConsumerWidget {
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                type == 'location'
-                    ? '${data.type}  -  ${data.dimension}'
-                    : '${data.episode}  -  ${data.air_date}',
-                style: const TextStyle(color: Colors.white),
+              Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width - 20,
+                child: Text(
+                  type == 'location'
+                      ? '${data.type}  -  ${data.dimension}'
+                      : '${data.episode}  -  ${data.air_date}',
+                  style: const TextStyle(color: Colors.white),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               const SizedBox(
                 height: 5,

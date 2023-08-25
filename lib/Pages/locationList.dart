@@ -5,25 +5,35 @@ import 'package:rickandmorty/utility/models.dart' as model;
 import 'locationCard.dart';
 
 class LocationList extends StatefulWidget {
-  const LocationList({
+  String url;
+  LocationList({
+    required this.url,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<LocationList> createState() => _LocationListState();
+  State<LocationList> createState() => LocationListState();
 }
 
-class _LocationListState extends State<LocationList> {
+class LocationListState extends State<LocationList>
+    with AutomaticKeepAliveClientMixin {
   late final PagingController<String, dynamic> _pagingController;
 
   @override
   void initState() {
-    _pagingController = PagingController(
-        firstPageKey: 'https://rickandmortyapi.com/api/location');
+    _pagingController = PagingController(firstPageKey: widget.url);
     _pagingController.addPageRequestListener((url) {
       _fetchPage(url);
     });
     super.initState();
+  }
+
+  void refresh(String url) {
+    setState(() {
+      widget.url = url;
+      _fetchPage(url);
+    });
+    _pagingController.refresh();
   }
 
   @override
@@ -52,6 +62,7 @@ class _LocationListState extends State<LocationList> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     print('built');
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -71,4 +82,7 @@ class _LocationListState extends State<LocationList> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => false;
 }

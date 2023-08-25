@@ -10,10 +10,11 @@ class EpisodeList extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<EpisodeList> createState() => _EpisodeListState();
+  State<EpisodeList> createState() => EpisodeListState();
 }
 
-class _EpisodeListState extends State<EpisodeList> {
+class EpisodeListState extends State<EpisodeList>
+    with AutomaticKeepAliveClientMixin {
   late final PagingController<String, dynamic> _pagingController;
 
   @override
@@ -24,6 +25,13 @@ class _EpisodeListState extends State<EpisodeList> {
       _fetchPage(url);
     });
     super.initState();
+  }
+
+  void refresh(String url) {
+    setState(() {
+      _fetchPage(url);
+    });
+    _pagingController.refresh();
   }
 
   @override
@@ -52,6 +60,7 @@ class _EpisodeListState extends State<EpisodeList> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     print('built');
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -68,4 +77,7 @@ class _EpisodeListState extends State<EpisodeList> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => false;
 }
