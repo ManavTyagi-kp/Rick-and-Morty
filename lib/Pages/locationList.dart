@@ -1,79 +1,51 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:rickandmorty/utility/models.dart' as model;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rickandmorty/utility/riverpod.dart';
 import 'locationCard.dart';
 
-class LocationList extends StatefulWidget {
-  const LocationList({
-    Key? key,
-  }) : super(key: key);
+class LocationListCustom extends ConsumerStatefulWidget {
+  const LocationListCustom({super.key});
 
   @override
-  State<LocationList> createState() => _LocationListState();
+  ConsumerState<LocationListCustom> createState() => _LocationListCustomState();
 }
 
-class _LocationListState extends State<LocationList> {
-  late final PagingController<String, dynamic> _pagingController;
-
-  @override
-  void initState() {
-    _pagingController = PagingController(
-        firstPageKey: 'https://rickandmortyapi.com/api/location');
-    _pagingController.addPageRequestListener((url) {
-      _fetchPage(url);
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _fetchPage(String url) async {
-    print(url);
-    try {
-      final response = await get(Uri.parse(url));
-      model.Page responseList = model.Page.fromJson(response.body);
-      List postList = responseList.results;
-      final isLastPage = responseList.info!.next.isNull;
-      if (isLastPage) {
-        _pagingController.appendLastPage(postList);
-      } else {
-        _pagingController.appendPage(postList, responseList.info!.next);
-      }
-    } catch (e) {
-      print("error --> $e");
-      _pagingController.error = e;
-    }
-  }
-
+class _LocationListCustomState extends ConsumerState<LocationListCustom>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
-    print('built');
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rick and Morty App'),
-      ),
-      backgroundColor: Colors.transparent,
-      body: RefreshIndicator(
-        onRefresh: () => Future.sync(() => _pagingController.refresh()),
-        child: PagedListView<String, dynamic>(
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate(
-            itemBuilder: ((context, item, index) {
+    super.build(context);
+    List locations = ref.watch(locListProvider);
+    final asyncList = ref.watch(fetchLoc);
+    return Center(
+      child: switch (asyncList) {
+        AsyncData() => ListView.builder(
+            itemCount: locations.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == locations.length - 1) {
+                ref.read(fetchLoc.notifier).nextPage();
+                // print(a);
+                if (ref.watch(fetchLoc.notifier).page!.info!.next != null) {
+                  return const Align(
+                    alignment: Alignment.bottomCenter,
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }
               return ListCard(
-                item: item,
+                item: locations[index],
                 type: 'location',
               );
-            }),
+            },
           ),
-        ),
-      ),
+        AsyncError(:final error) => Text('Error: $error'),
+        AsyncValue() => const Center(
+            child: CircularProgressIndicator(),
+          ),
+      },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

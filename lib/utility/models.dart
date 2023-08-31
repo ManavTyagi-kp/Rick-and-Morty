@@ -185,7 +185,7 @@ class Character {
           ? CharLocation.fromMap(map['location'] as Map<String, dynamic>)
           : null,
       image: map['image'] != null ? map['image'] as String : null,
-      episode: List.from((map['episode'] as List)),
+      episode: List?.from((map['episode'] as List)),
       url: map['url'] != null ? map['url'] as String : null,
       created: map['created'] != null ? map['created'] as String : null,
     );
