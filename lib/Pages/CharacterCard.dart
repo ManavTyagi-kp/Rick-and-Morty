@@ -236,7 +236,7 @@ class _ScrollCardsState extends State<ScrollCards> {
                     return ref
                         .watch(characterProvider(widget.residents[i]))
                         .when(data: (data) {
-                      print('inside resident');
+                      // print('inside resident');
                       return Transform.scale(
                         scale: i == _index ? 1 : 0.8,
                         child: Card(

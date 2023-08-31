@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart';
 import 'package:rickandmorty/Pages/chractersList.dart';
 import 'package:rickandmorty/Pages/episodeList.dart';
-import 'package:rickandmorty/utility/models.dart' as models;
+import 'package:rickandmorty/utility/riverpod.dart';
 
 import 'locationList.dart';
 
@@ -15,34 +14,21 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav>
-    with
-        SingleTickerProviderStateMixin,
-        AutomaticKeepAliveClientMixin<BottomNav> {
-  GlobalKey<CharacterListState> characterListKey =
-      GlobalKey<CharacterListState>();
-  GlobalKey<LocationListState> locationListKey = GlobalKey<LocationListState>();
-  GlobalKey<EpisodeListState> episodeListKey = GlobalKey<EpisodeListState>();
-
+    with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   bool _search = false;
   late TabController _tabController;
   String query = '';
-  String charUrl = 'https://rickandmortyapi.com/api/character/';
-  String locUrl = 'https://rickandmortyapi.com/api/location';
-  String epiUrl = 'https://rickandmortyapi.com/api/episode';
 
   @override
   void initState() {
     super.initState();
-    // _filteredData = _data;
     _tabController = TabController(length: 3, vsync: this);
-    // _searchController.addListener(_performSearch);
   }
 
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     print(_tabController.index);
     return Consumer(builder: (context, ref, child) {
       return Scaffold(
@@ -60,12 +46,9 @@ class _BottomNavState extends State<BottomNav>
                   onPressed: () {
                     setState(() {
                       _search = false;
-                      characterListKey.currentState?.refresh(
-                          'https://rickandmortyapi.com/api/character/');
-                      locationListKey.currentState?.refresh(
-                          'https://rickandmortyapi.com/api/location/');
-                      episodeListKey.currentState
-                          ?.refresh('https://rickandmortyapi.com/api/episode/');
+                      ref.watch(fetchChar.notifier).startQuery('');
+                      ref.watch(fetchLoc.notifier).startQuery('');
+                      ref.watch(fetchEpisode.notifier).startQuery('');
                     });
                   },
                   child: const Icon(
@@ -98,32 +81,14 @@ class _BottomNavState extends State<BottomNav>
                       onChanged: (value) {
                         query = 'name=$value';
                         setState(() {
-                          print(_tabController.index);
                           if (_tabController.index == 0) {
-                            print('character');
-                            charUrl =
-                                'https://rickandmortyapi.com/api/character/?$query';
-                            // CharacterList(url: charUrl);
-                            characterListKey.currentState?.refresh(charUrl);
+                            ref.watch(fetchChar.notifier).startQuery(query);
                           } else if (_tabController.index == 1) {
-                            print('location');
-                            print(query);
-                            locUrl =
-                                'https://rickandmortyapi.com/api/location/?$query';
-                            // LocationList(url: locUrl);
-                            locationListKey.currentState?.refresh(locUrl);
+                            ref.watch(fetchLoc.notifier).startQuery(query);
                           } else {
-                            print('episode');
-                            episodeListKey.currentState?.refresh(
-                                'https://rickandmortyapi.com/api/episode?$query');
+                            ref.watch(fetchEpisode.notifier).startQuery(query);
                           }
-                          // _tabController.notifyListeners();
-                          // characterListKey.currentState?.refresh(charUrl);
                         });
-
-                        // CharacterList(
-                        //     url:
-                        //         'https://rickandmortyapi.com/api/character/?$query');
                       },
                     ),
                   ),
@@ -157,21 +122,13 @@ class _BottomNavState extends State<BottomNav>
         backgroundColor: const Color.fromARGB(255, 248, 224, 138),
         body: TabBarView(
           controller: _tabController,
-          children: <Widget>[
-            CharacterList(key: characterListKey, url: charUrl),
-            LocationList(
-              key: locationListKey,
-              url: locUrl,
-            ),
-            EpisodeList(
-              key: episodeListKey,
-            ),
+          children: const <Widget>[
+            CharacterListPod(),
+            LocationListCustom(),
+            EpisodeListPod(),
           ],
         ),
       );
     });
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

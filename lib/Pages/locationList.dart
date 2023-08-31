@@ -1,88 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:rickandmorty/utility/models.dart' as model;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rickandmorty/utility/riverpod.dart';
 import 'locationCard.dart';
 
-class LocationList extends StatefulWidget {
-  String url;
-  LocationList({
-    required this.url,
-    Key? key,
-  }) : super(key: key);
+class LocationListCustom extends ConsumerStatefulWidget {
+  const LocationListCustom({super.key});
 
   @override
-  State<LocationList> createState() => LocationListState();
+  ConsumerState<LocationListCustom> createState() => _LocationListCustomState();
 }
 
-class LocationListState extends State<LocationList>
+class _LocationListCustomState extends ConsumerState<LocationListCustom>
     with AutomaticKeepAliveClientMixin {
-  late final PagingController<String, dynamic> _pagingController;
-
-  @override
-  void initState() {
-    _pagingController = PagingController(firstPageKey: widget.url);
-    _pagingController.addPageRequestListener((url) {
-      _fetchPage(url);
-    });
-    super.initState();
-  }
-
-  void refresh(String url) {
-    setState(() {
-      widget.url = url;
-      _fetchPage(url);
-    });
-    _pagingController.refresh();
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _fetchPage(String url) async {
-    print(url);
-    try {
-      final response = await get(Uri.parse(url));
-      model.Page responseList = model.Page.fromJson(response.body);
-      List postList = responseList.results;
-      final isLastPage = responseList.info!.next == null;
-      if (isLastPage) {
-        _pagingController.appendLastPage(postList);
-      } else {
-        _pagingController.appendPage(postList, responseList.info!.next);
-      }
-    } catch (e) {
-      print("error --> $e");
-      _pagingController.error = e;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    print('built');
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: RefreshIndicator(
-        onRefresh: () => Future.sync(() => _pagingController.refresh()),
-        child: PagedListView<String, dynamic>(
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate(
-            itemBuilder: ((context, item, index) {
+    List locations = ref.watch(locListProvider);
+    final asyncList = ref.watch(fetchLoc);
+    return Center(
+      child: switch (asyncList) {
+        AsyncData() => ListView.builder(
+            itemCount: locations.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == locations.length - 1) {
+                ref.read(fetchLoc.notifier).nextPage();
+                // print(a);
+                if (ref.watch(fetchLoc.notifier).page!.info!.next != null) {
+                  return const Align(
+                    alignment: Alignment.bottomCenter,
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }
               return ListCard(
-                item: item,
+                item: locations[index],
                 type: 'location',
               );
-            }),
+            },
           ),
-        ),
-      ),
+        AsyncError(:final error) => Text('Error: $error'),
+        AsyncValue() => const Center(
+            child: CircularProgressIndicator(),
+          ),
+      },
     );
   }
 
   @override
-  bool get wantKeepAlive => false;
+  bool get wantKeepAlive => true;
 }
