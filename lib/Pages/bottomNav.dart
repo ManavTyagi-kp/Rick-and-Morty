@@ -53,7 +53,6 @@ class _BottomNavState extends State<BottomNav>
                   },
                   child: const Icon(
                     Icons.arrow_back_ios_new,
-                    // size: 45,
                   ),
                 )
               : const Icon(null),
