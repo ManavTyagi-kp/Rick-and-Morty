@@ -38,13 +38,13 @@ Running a Flutter project on your PC or mobile device is a breeze. Follow these 
 
 - **Install Flutter:** If you haven't already, install Flutter on your development machine. This includes downloading the SDK, setting up your preferred editor, and adding Flutter to your system's PATH.
 
-- **Clone the Repository:** Clone the To-Do List app repository to your local machine using Git. Open your terminal and run:
+- **Clone the Repository:** Clone the Rick and Morty app repository to your local machine using Git. Open your terminal and run:
 
     git clone https://github.com/ManavTyagi-kp/Rick-and-Morty.git
 
 Navigate to the Project: Use the terminal to navigate to the project's root directory:
 
-    cd to_do_list
+    cd rick-and-morty
 
 Get Dependencies: Run the following command to get the required dependencies:
 
@@ -56,7 +56,7 @@ Run the App: Launch the app on an emulator or connected device using the followi
 
 Explore and Customize: Once the app is up and running, explore its features and customize it to your liking. Experiment with the code and design to make the app your own.
 
-Now you're all set to dive into the world of Flutter app development and experience the To-Do List app firsthand!
+Now you're all set to dive into the world of Flutter app development and experience the Rick and Morty app firsthand!
 
 # Let's Get Going!
 
