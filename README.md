@@ -60,7 +60,7 @@ Now you're all set to dive into the world of Flutter app development and experie
 
 # Let's Get Going!
 
-Feel free to explore, experiment, and customize this To-Do List app project. Whether you're just starting your coding journey or looking to enhance your Flutter skills, this project has something for everyone.
+Feel free to explore, experiment, and customize this Rick and Morty app project. 
 
 So go ahead, dive into the code, and happy coding! 🚀📱
 # 
