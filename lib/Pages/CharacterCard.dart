@@ -1,4 +1,3 @@
-// import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,28 +20,25 @@ class CharacterCard extends ConsumerWidget {
       height: 250,
       width: deviceWidth - 10,
       child: Card(
-        // color: const Color.fromARGB(255, 33, 30, 92),
         color: const Color.fromARGB(255, 14, 43, 81),
-        // color: Color.fromARGB(255, 16, 37, 65),
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           // avatar
           child: Center(
             child: Row(
-              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
                   flex: 3,
                   child: SizedBox(
                     height: 200,
-                    width: deviceWidth * (220 / deviceWidth),
+                    width: deviceWidth * (18 / 100),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
                         Center(
                           child: SizedBox(
                             height: 150,
-                            width: deviceWidth * (150 / deviceWidth),
+                            width: deviceWidth * (20 / 100),
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
@@ -57,8 +53,8 @@ class CharacterCard extends ConsumerWidget {
                                   ),
                                 ),
                                 Transform.translate(
-                                  offset: const Offset(
-                                    (150 - (74 * 2)) / 2,
+                                  offset: Offset(
+                                    ((deviceWidth * (16 / 100)) - (75 * 2)) / 2,
                                     0,
                                   ),
                                   child: CircleAvatar(

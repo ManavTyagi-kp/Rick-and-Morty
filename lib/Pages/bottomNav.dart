@@ -33,7 +33,7 @@ class _BottomNavState extends State<BottomNav>
     return Consumer(builder: (context, ref, child) {
       return Scaffold(
         appBar: AppBar(
-          scrolledUnderElevation: 100,
+          // scrolledUnderElevation: 100,
           forceMaterialTransparency: false,
           backgroundColor: const Color.fromARGB(255, 248, 224, 138),
           elevation: 10,
@@ -118,6 +118,7 @@ class _BottomNavState extends State<BottomNav>
             ],
           ),
         ),
+        // backgroundColor: const Color.fromARGB(255, 248, 224, 138),
         backgroundColor: const Color.fromARGB(255, 248, 224, 138),
         body: TabBarView(
           controller: _tabController,

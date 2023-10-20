@@ -12,11 +12,22 @@ class CharacterListPod extends ConsumerStatefulWidget {
   ConsumerState<CharacterListPod> createState() => _CharacterListPodState();
 }
 
-class _CharacterListPodState extends ConsumerState<CharacterListPod>
-    with AutomaticKeepAliveClientMixin {
+class _CharacterListPodState extends ConsumerState<CharacterListPod> {
+  @override
+  void deactivate() {
+    print('deactivate');
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    print('dispose');
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    // super.build(context);
     List characters = ref.watch(listProvider);
     final asyncList = ref.watch(fetchChar);
     return Center(
@@ -47,6 +58,6 @@ class _CharacterListPodState extends ConsumerState<CharacterListPod>
     );
   }
 
-  @override
-  bool get wantKeepAlive => true;
+  // @override
+  // bool get wantKeepAlive => true;
 }
