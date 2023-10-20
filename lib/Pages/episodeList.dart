@@ -13,6 +13,12 @@ class EpisodeListPod extends ConsumerStatefulWidget {
 class _EpisodeListPodState extends ConsumerState<EpisodeListPod>
     with AutomaticKeepAliveClientMixin {
   @override
+  void deactivate() {
+    print('deactivate');
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     List episodes = ref.watch(episodeListProvider);

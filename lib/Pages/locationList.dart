@@ -13,6 +13,12 @@ class LocationListCustom extends ConsumerStatefulWidget {
 class _LocationListCustomState extends ConsumerState<LocationListCustom>
     with AutomaticKeepAliveClientMixin {
   @override
+  void deactivate() {
+    print('deactivate');
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     List locations = ref.watch(locListProvider);
